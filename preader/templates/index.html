@@ -1,0 +1,32 @@
+{% extends 'style.html' %}
+{% block content %}
+<div>
+    <h3>Index</h3>
+    {% if form %}
+        <legend>Upload a file to be analyzed</legend>
+        <form action="{{ url_for('main.index') }}" method='POST'>
+            <div>
+                <fieldset>
+                    {{ form.file.label() }}
+                    {{ form.file() }}
+                </fieldset>
+                {{ form.submit(class='btn btn-primary')}}
+            </div>
+        </form>
+    {% endif %}
+</div>
+{% if current_file %}
+    <div>
+        <h3>File: {{ current_file.name }}</h3>
+        <div>
+            <ul>
+                {% for package in current_file.packages %}
+                    <li>
+                        <a href="{{url_for('main.package', name=package.name)}}">{{ package.name }}</a>
+                    </li>
+                {% endfor %}
+            </ul>
+        </div>
+    </div>
+{% endif %}
+{% endblock content %}

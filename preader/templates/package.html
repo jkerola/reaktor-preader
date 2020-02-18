@@ -1,0 +1,39 @@
+{% extends 'style.html' %}
+{% block content %}
+<div>
+    <div>
+        <h3>{{ package.name }}</h3>
+            <div>Depends:
+                <ul>
+                    {% for dependency in dependencies %}
+                        {% if dependency.strip() == 'None' %}
+                            <p>None</p>
+                        {% else %}
+                            <li>
+                                <a href="{{ url_for('main.package', name=dependency.strip()) }}">{{ dependency }}</a>
+                            </li>
+                        {% endif %}
+                    {% endfor %}
+                </ul>
+            </div>
+            <div>Depended on by:
+                <ul>
+                    {% for package in packages_depending %}
+                        {% if package %}
+                            <li>
+                                <a href="{{ url_for('main.package', name=package.name) }}">{{ package.name }}</a>
+                            </li>
+                        {% else %}
+                            None
+                        {% endif %}
+                    {% endfor %}
+                </ul>
+            </div>
+    </div>
+    <div>
+       <p>
+           Description: {{ package.description }}
+       </p>
+    </div>
+</div>
+{% endblock content %}

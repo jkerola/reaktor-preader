@@ -1,0 +1,11 @@
+#vscode
+.vscode
+#zip files
+*.zip
+#dataset
+status.real
+#virtual environment
+__pycache__/
+reaktor_env/
+#database
+*.db
