@@ -28,7 +28,8 @@ def read_file(file):
 
 
 def filter_duplicate_names(package_list):
-    '''Removes duplicate packages from the given list, returns a filtered list'''
+    '''Removes duplicate packages from the given list,
+    returns a filtered list'''
     filtered_packages = []
     duplicate_package_names = []
     for package in package_list:
@@ -36,6 +37,21 @@ def filter_duplicate_names(package_list):
             duplicate_package_names.append(package.name)
             filtered_packages.append(package)
     return filtered_packages
+
+
+def filter_alternative_packages(package_list):
+    '''Checks for and sorts packages into lists depending whether they have
+    alternative packages listed'''
+    alternatives = []
+    singles = []
+    for package in package_list:
+        if "|" in package:  # Check for alternative packages
+            alter_package = package.split('|')
+            alternatives.append(alter_package)
+        else:
+            singles.append(package)
+    return singles, alternatives
+
 
 if __name__ == "__main__":
     name, packages = read_file('status.raspberry')

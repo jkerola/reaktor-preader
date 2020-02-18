@@ -1,7 +1,7 @@
 from preader import db
 from flask import Blueprint, render_template, request, redirect, session, url_for
 from .forms import FileUploadForm
-from .utils import read_file, filter_duplicate_names
+from .utils import read_file, filter_duplicate_names, filter_alternative_packages
 from .models import File, Package
 import secrets
 
@@ -71,17 +71,11 @@ def package(name):
 
     # Depending package name formatting
     dependencies = package.depends.split(',')
-    alternatives_list = []
-    for dependency in dependencies:
-        if "|" in dependency:  # Check for alternative packages
-            print(dependency)
-            alternatives = dependency.split('|')
-            alternatives_list.append(alternatives)
-            dependencies.remove(dependency)
+    singles, alternatives = filter_alternative_packages(dependencies)
 
     # Fetch packages that depend ON the currently viewed package
     packages_depending = Package.query.\
-        filter(Package.package_file==package_file.id).\
+        filter(Package.package_file == package_file.id).\
         filter(Package.depends.contains(name)).\
         all()
     # Filter out duplicate packages that result from different versions
@@ -92,8 +86,8 @@ def package(name):
     return render_template(
         'package.html',
         package=package,
-        dependencies=dependencies,
-        alternatives_list=alternatives_list,
+        dependencies=singles,
+        alternatives_list=alternatives,
         packages_depending=filtered_depending_packages,
         package_names=package_names
         )
