@@ -1,32 +1,41 @@
 {% extends 'style.html' %}
 {% block content %}
-<div>
-    <h3>Index</h3>
-    {% if form %}
-        <legend>Upload a file to be analyzed</legend>
-        <form action="{{ url_for('main.index') }}" method='POST'>
-            <div>
-                <fieldset>
-                    {{ form.file.label() }}
-                    {{ form.file() }}
-                </fieldset>
-                {{ form.submit(class='btn btn-primary')}}
-            </div>
-        </form>
-    {% endif %}
-</div>
+{% if not current_file %}
+    <div>
+        <h3>Index</h3>
+        {% if form %}
+            <legend>Upload a file to be analyzed</legend>
+            <form action="{{ url_for('main.index') }}" method='POST'>
+                <div>
+                    <fieldset>
+                        {{ form.file.label() }}
+                        {{ form.file() }}
+                    </fieldset>
+                    {{ form.submit(class='btn btn-primary')}}
+                </div>
+            </form>
+        {% endif %}
+    </div>
+{% endif %}
 <!--Display the file index if a file has been uploaded-->
 {% if current_file %}
     <div>
+        <a href="{{ url_for('main.reset_session') }}">
+            <button href=>Reset Session</button>
+        </a>
         <h3>Current file: {{ current_file.name }}</h3>
         <div>
-            <ul>
-                {% for package in current_file.packages %}
-                    <li>
-                        <a href="{{url_for('main.package', name=package.name)}}">{{ package.name }}</a>
-                    </li>
-                {% endfor %}
-            </ul>
+            {% if current_file.packages %}
+                <ul>
+                    {% for package in current_file.packages %}
+                        <li>
+                            <a href="{{url_for('main.package', name=package.name)}}">{{ package.name }}</a>
+                        </li>
+                    {% endfor %}
+                </ul>
+                {% else %}
+                    Could not load data from file. Please check the file format.
+                {% endif %}
         </div>
     </div>
 {% endif %}

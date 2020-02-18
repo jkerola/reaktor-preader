@@ -3,8 +3,10 @@
 #zip files
 *.zip
 #dataset
-false.real
+test.real
+test.fake
 status.real
+status.raspberry
 #virtual environment
 __pycache__/
 reaktor_env/

@@ -1,7 +1,7 @@
 from preader import db
-from flask import Blueprint, render_template, request, redirect, session
+from flask import Blueprint, render_template, request, redirect, session, url_for
 from .forms import FileUploadForm
-from .utils import read_file
+from .utils import read_file, filter_duplicate_names
 from .models import File, Package
 import secrets
 
@@ -35,8 +35,8 @@ def index(package_file=None):
         print(session_id)
         package_file = file_form.file.data
         name, data = read_file(package_file)
-        if not data:  # If the file does not contain required info
-            name = f"Could not read file '{name}'. Please check file validity."
+        #if not data:  # If the file does not contain required info
+        #    name = f"Could not read file '{name}'. Please check file validity."
         session_file = File(
             name=name,
             session_id=session_id
@@ -73,23 +73,20 @@ def package(name):
     dependencies = package.depends.split(',')
     alternatives_list = []
     for dependency in dependencies:
-        if '|' in dependency:  # Check for alternative packages
+        if "|" in dependency:  # Check for alternative packages
+            print(dependency)
             alternatives = dependency.split('|')
             alternatives_list.append(alternatives)
             dependencies.remove(dependency)
 
     # Fetch packages that depend ON the currently viewed package
     packages_depending = Package.query.\
+        filter(Package.package_file==package_file.id).\
         filter(Package.depends.contains(name)).\
         all()
     # Filter out duplicate packages that result from different versions
     # ex. libxxx(0.3), libxx(0.3.1) etc
-    filtered_depending_packages = []
-    duplicate_package_names = []
-    for dependency in packages_depending:
-        if dependency.name not in duplicate_package_names:
-            duplicate_package_names.append(dependency.name)
-            filtered_depending_packages.append(dependency)
+    filtered_depending_packages = filter_duplicate_names(packages_depending)
     # Fetch all names to check wether package definition exists in file
     package_names = [package.name for package in package_file.packages]
     return render_template(
@@ -100,3 +97,9 @@ def package(name):
         packages_depending=filtered_depending_packages,
         package_names=package_names
         )
+
+@main.route('/reset_session')
+def reset_session():
+    '''Reset session cookies'''
+    session.clear()
+    return redirect(url_for('main.index'))

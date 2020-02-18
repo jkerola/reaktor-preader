@@ -19,7 +19,7 @@ def read_file(file):
                 package['depends'] = formatted_line.strip()
             if line.startswith('Description') or line.startswith(' '):
                 description += line.lstrip('Description:').lstrip()
-            if line.startswith('Original-Maintainer'):
+            if line.startswith('\n'):
                 package['description'] = description.replace('\n', ' ')
                 packages_list.append(package)
                 package = {}
@@ -27,6 +27,16 @@ def read_file(file):
         return packages_file.name, packages_list
 
 
+def filter_duplicate_names(package_list):
+    '''Removes duplicate packages from the given list, returns a filtered list'''
+    filtered_packages = []
+    duplicate_package_names = []
+    for package in package_list:
+        if package.name not in duplicate_package_names:
+            duplicate_package_names.append(package.name)
+            filtered_packages.append(package)
+    return filtered_packages
+
 if __name__ == "__main__":
-    name, packages = read_file('status.real')
+    name, packages = read_file('status.raspberry')
     print(packages)

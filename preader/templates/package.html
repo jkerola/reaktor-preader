@@ -31,7 +31,11 @@
                             <div>
                                 {% for alternative in alternatives %}
                                     {% if alternative.strip() in package_names %}
-                                        <a href="{{ url_for('main.package', name=alternative.strip()) }}">{{ alternative }}</a>
+                                        {% if alternative == alternatives[0] %}
+                                            <a href="{{ url_for('main.package', name=alternative.strip()) }}">{{ alternative }}</a>
+                                        {% else %}
+                                            <small> or </small><a href="{{ url_for('main.package', name=alternative.strip()) }}">{{ alternative }}</a>
+                                        {% endif %}
                                     {% else %}
                                         <small> or </small> {{ alternative }}
                                     {% endif %}
@@ -44,15 +48,21 @@
             <div>Depended on by:
                 <ul>
                     <!--Different versions of the same package have been filtered out-->
-                    {% for package in packages_depending %}
-                        {% if package %}
-                            <li>
-                                <a href="{{ url_for('main.package', name=package.name) }}">{{ package.name }}</a>
-                            </li>
-                        {% else %}
-                            None
-                        {% endif %}
-                    {% endfor %}
+                    {% if packages_depending %}
+                        {% for package in packages_depending %}
+                            {% if package.name in package_names %}
+                                <li>
+                                    <a href="{{ url_for('main.package', name=package.name) }}">{{ package.name }}</a>
+                                </li>
+                            {% else %}
+                                <li>
+                                    {{ package.name }}
+                                </li>
+                            {% endif %}
+                        {% endfor %}
+                    {% else %}
+                        None
+                    {% endif %}
                 </ul>
             </div>
     </div>
