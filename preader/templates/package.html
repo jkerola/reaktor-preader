@@ -14,6 +14,7 @@
                     {% for dependency in dependencies %}
                         {% if dependency == 'None' %}
                             <p>None</p>
+                        <!--Checks if package definition exists before creating a link to it-->
                         {% elif dependency.strip() in package_names %}
                             <li><a href="{{ url_for('main.package', name=dependency.strip()) }}">
                                 {{ dependency }}
@@ -24,6 +25,7 @@
                             </li>
                         {% endif %}
                     {% endfor %}
+                    <!--Packages with alternatives are stored in a separate list-->
                     {% for alternatives in alternatives_list %}
                         <li>
                             <div>
@@ -41,14 +43,11 @@
             </div>
             <div>Depended on by:
                 <ul>
+                    <!--Different versions of the same package have been filtered out-->
                     {% for package in packages_depending %}
-                        {% if packages_depending.count(package) == 1 %}
+                        {% if package %}
                             <li>
                                 <a href="{{ url_for('main.package', name=package.name) }}">{{ package.name }}</a>
-                            </li>
-                        {% elif packages_depending.count(package) > 1 %}
-                            <li>
-                                <a href="{{ url_for('main.package', name=package.name) }}"></a>
                             </li>
                         {% else %}
                             None

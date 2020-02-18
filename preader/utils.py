@@ -1,7 +1,9 @@
 import re
 
+
 def read_file(file):
-    '''Read, format and return package file name and data in a dictionary'''
+    '''Format and return file data in a list of dictionaries for
+    database purposes. Strips empty spaces and version numbers from select data.'''
     packages_list = []
     package = {}
     description = ''
