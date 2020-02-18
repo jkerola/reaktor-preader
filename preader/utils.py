@@ -18,7 +18,7 @@ def read_file(file):
             if line.startswith('Description') or line.startswith(' '):
                 description += line.lstrip('Description:').lstrip()
             if line.startswith('Original-Maintainer'):
-                package['description'] = description
+                package['description'] = description.replace('\n', ' ')
                 packages_list.append(package)
                 package = {}
                 description = ''

@@ -4,6 +4,11 @@
     <div>
         <a href="{{ url_for('main.index') }}">Return to file index</a>
         <h3>{{ package.name }}</h3>
+        <div>
+            <p>
+                Description: {{ package.description }}
+            </p>
+         </div>
             <div>Depends:
                 <ul>
                     {% for dependency in dependencies %}
@@ -37,9 +42,13 @@
             <div>Depended on by:
                 <ul>
                     {% for package in packages_depending %}
-                        {% if package %}
+                        {% if packages_depending.count(package) == 1 %}
                             <li>
                                 <a href="{{ url_for('main.package', name=package.name) }}">{{ package.name }}</a>
+                            </li>
+                        {% elif packages_depending.count(package) > 1 %}
+                            <li>
+                                <a href="{{ url_for('main.package', name=package.name) }}"></a>
                             </li>
                         {% else %}
                             None
@@ -47,11 +56,6 @@
                     {% endfor %}
                 </ul>
             </div>
-    </div>
-    <div>
-       <p>
-           Description: {{ package.description }}
-       </p>
     </div>
 </div>
 {% endblock content %}

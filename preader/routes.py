@@ -64,21 +64,26 @@ def package(name):
         filter_by(name=name).first_or_404()
     dependencies = package.depends.split(',')
     alternatives_list = []
-    for package in dependencies:
-        if '|' in package:
+    for dependency in dependencies:
+        if '|' in dependency:
             alternatives = []
-            alternatives = package.split('|')
+            alternatives = dependency.split('|')
             alternatives_list.append(alternatives)
-            dependencies.remove(package)
-    print(alternatives_list)
+            dependencies.remove(dependency)
     packages_depending = Package.query.\
         filter(Package.depends.contains(name)).\
         all()
+    filtered_depending_packages = []
+    duplicate_package_names = []
+    for dependency in packages_depending:
+        if dependency.name not in duplicate_package_names:
+            duplicate_package_names.append(dependency.name)
+            filtered_depending_packages.append(dependency)
     return render_template(
         'package.html',
         package=package,
         dependencies=dependencies,
         alternatives_list=alternatives_list,
-        packages_depending=packages_depending,
+        packages_depending=filtered_depending_packages,
         package_names=package_names
         )
