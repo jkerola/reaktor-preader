@@ -2,17 +2,35 @@
 {% block content %}
 <div>
     <div>
+        <a href="{{ url_for('main.index') }}">Return to file index</a>
         <h3>{{ package.name }}</h3>
             <div>Depends:
                 <ul>
                     {% for dependency in dependencies %}
-                        {% if dependency.strip() == 'None' %}
+                        {% if dependency == 'None' %}
                             <p>None</p>
+                        {% elif dependency.strip() in package_names %}
+                            <li><a href="{{ url_for('main.package', name=dependency.strip()) }}">
+                                {{ dependency }}
+                            </a></li>
                         {% else %}
                             <li>
-                                <a href="{{ url_for('main.package', name=dependency.strip()) }}">{{ dependency }}</a>
+                                {{ dependency }}
                             </li>
                         {% endif %}
+                    {% endfor %}
+                    {% for alternatives in alternatives_list %}
+                        <li>
+                            <div>
+                                {% for alternative in alternatives %}
+                                    {% if alternative.strip() in package_names %}
+                                        <a href="{{ url_for('main.package', name=alternative.strip()) }}">{{ alternative }}</a>
+                                    {% else %}
+                                        <small> or </small> {{ alternative }}
+                                    {% endif %}
+                                {% endfor %}
+                            </div>
+                        </li>
                     {% endfor %}
                 </ul>
             </div>

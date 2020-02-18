@@ -9,7 +9,11 @@ class File(db.Model):
     session_id = db.Column(db.String, nullable=False, unique=True)
     # Relationships
     packages = db.relationship(
-        'Package', backref='file', cascade='all, delete-orphan', lazy=True
+        'Package',
+        backref='file',
+        cascade='all, delete-orphan',
+        order_by='Package.name.asc()',
+        lazy=True
         )
 
 

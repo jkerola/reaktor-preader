@@ -1,0 +1,10 @@
+{% extends 'style.html' %}
+{% block content %}
+<div>
+    <h3>Internal server error (500)</h3>
+    <p>
+        Something went wrong on our end. Please try again later.
+    </p>
+    <a href="{{ url_for(main.index) }}">Return to file index</a>
+</div>
+{% endblock content %}
