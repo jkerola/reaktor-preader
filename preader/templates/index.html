@@ -5,7 +5,7 @@
         <h3>Index</h3>
         {% if form %}
             <legend>Upload a file to be analyzed</legend>
-            <form action="{{ url_for('main.index') }}" method='POST'>
+            <form  enctype="multipart/form-data" action="{{ url_for('main.index') }}" method='POST'>
                 <div>
                     <fieldset>
                         {{ form.file.label() }}

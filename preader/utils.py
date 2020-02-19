@@ -1,30 +1,33 @@
 import re
+from io import StringIO
 
 
-def read_file(file):
+def read_file(packages_file):
     '''Format and return file data in a list of dictionaries for
     database purposes. Strips empty spaces and version numbers from select data.'''
     packages_list = []
     package = {}
     description = ''
-    with open(file) as packages_file:
-        for line in packages_file:
-            if line.startswith('Package'):
-                formatted_line = line.lstrip('Package:').rstrip('\n')
-                formatted_line = re.sub(r'\(.*?\)', '', formatted_line)
-                package['name'] = formatted_line.strip()
-            if line.startswith('Depends'):
-                formatted_line = line.lstrip('Depends:').rstrip('\n')
-                formatted_line = re.sub(r'\(.*?\)', '', formatted_line)
-                package['depends'] = formatted_line.strip()
-            if line.startswith('Description') or line.startswith(' '):
-                description += line.lstrip('Description:').lstrip()
-            if line.startswith('\n'):
-                package['description'] = description.replace('\n', ' ')
-                packages_list.append(package)
-                package = {}
-                description = ''
-        return packages_file.name, packages_list
+    print(packages_file.filename)
+    content = packages_file.stream.read().decode('utf-8')
+    buffer = StringIO(content)
+    for line in buffer.readlines():
+        if line.startswith('Package'):
+            formatted_line = line.lstrip('Package:').rstrip('\n')
+            formatted_line = re.sub(r'\(.*?\)', '', formatted_line)
+            package['name'] = formatted_line.strip()
+        if line.startswith('Depends'):
+            formatted_line = line.lstrip('Depends:').rstrip('\n')
+            formatted_line = re.sub(r'\(.*?\)', '', formatted_line)
+            package['depends'] = formatted_line.strip()
+        if line.startswith('Description') or line.startswith(' '):
+            description += line.lstrip('Description:').lstrip()
+        if line.startswith('\n'):
+            package['description'] = description.replace('\n', ' ')
+            packages_list.append(package)
+            package = {}
+            description = ''
+    return packages_file.filename, packages_list
 
 
 def filter_duplicate_names(package_list):

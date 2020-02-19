@@ -32,8 +32,7 @@ def index(package_file=None):
         # so the data is stored in a serverside database
         session_id = secrets.token_hex(16)
         session['_file_id'] = session_id
-        print(session_id)
-        package_file = file_form.file.data
+        package_file = request.files.get('file')
         name, data = read_file(package_file)
         session_file = File(
             name=name,
