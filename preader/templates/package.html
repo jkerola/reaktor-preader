@@ -10,24 +10,24 @@
             </p>
          </div>
             <div>Depends:
-                <ul>
+                <ul style='column-count: 1;column-gap: 0;'>
                     {% for dependency in dependencies %}
                         {% if dependency == 'None' %}
                             <p>None</p>
                         <!--Checks if package definition exists before creating a link to it-->
                         {% elif dependency.strip() in package_names %}
-                            <li><a href="{{ url_for('main.package', name=dependency.strip()) }}">
+                            <li style='display: inline-flexbox;'><a href="{{ url_for('main.package', name=dependency.strip()) }}">
                                 {{ dependency }}
                             </a></li>
                         {% else %}
-                            <li>
+                            <li style='display: inline-flexbox;'>
                                 {{ dependency }}
                             </li>
                         {% endif %}
                     {% endfor %}
                     <!--Packages with alternatives are stored in a separate list-->
                     {% for alternatives in alternatives_list %}
-                        <li>
+                        <li style='display: inline-flexbox;'>
                             <div>
                                 {% for alternative in alternatives %}
                                     {% if alternative.strip() in package_names %}
@@ -46,16 +46,16 @@
                 </ul>
             </div>
             <div>Depended on by:
-                <ul>
+                <ul style='column-count: 2;column-gap: 0;'>
                     <!--Different versions of the same package have been filtered out-->
                     {% if packages_depending %}
                         {% for package in packages_depending %}
                             {% if package.name in package_names %}
-                                <li>
+                                <li style='display: inline-flexbox;'>
                                     <a href="{{ url_for('main.package', name=package.name) }}">{{ package.name }}</a>
                                 </li>
                             {% else %}
-                                <li>
+                                <li style='display: inline-flexbox;'>
                                     {{ package.name }}
                                 </li>
                             {% endif %}
