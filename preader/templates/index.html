@@ -26,9 +26,9 @@
         <h3>Current file: {{ current_file.name }}</h3>
         <div>
             {% if current_file.packages %}
-                <ul>
+                <ul style='column-count: 4;column-gap: 0;'>
                     {% for package in current_file.packages %}
-                        <li>
+                        <li style='display: inline-flexbox;'>
                             <a href="{{url_for('main.package', name=package.name)}}">{{ package.name }}</a>
                         </li>
                     {% endfor %}

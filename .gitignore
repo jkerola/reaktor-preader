@@ -1,12 +1,8 @@
-#vscode
+#vscode and linting
 .vscode
+.flake8
 #zip files
 *.zip
-#dataset
-test.real
-test.fake
-status.real
-status.raspberry
 #virtual environment
 __pycache__/
 reaktor_env/

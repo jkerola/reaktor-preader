@@ -35,8 +35,6 @@ def index(package_file=None):
         print(session_id)
         package_file = file_form.file.data
         name, data = read_file(package_file)
-        #if not data:  # If the file does not contain required info
-        #    name = f"Could not read file '{name}'. Please check file validity."
         session_file = File(
             name=name,
             session_id=session_id
@@ -91,6 +89,7 @@ def package(name):
         packages_depending=filtered_depending_packages,
         package_names=package_names
         )
+
 
 @main.route('/reset_session')
 def reset_session():
