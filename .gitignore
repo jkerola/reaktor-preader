@@ -7,4 +7,6 @@
 __pycache__/
 reaktor_env/
 #database
-old.db
+*.db
+!preader.db
+
