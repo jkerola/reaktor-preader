@@ -58,36 +58,40 @@ def index(package_file=None):
 def package(name):
     '''Displays information about package, its dependecies and
     what packages depend on it.'''
-    package_file = File.query.\
-        filter_by(session_id=session['_file_id']).\
-        first()
-    # Fetch the currently viewed package or 404
-    package = Package.query.\
-        filter_by(package_file=package_file.id).\
-        filter_by(name=name).first_or_404()
+    try:
+        if session['_file_id']:
+            package_file = File.query.\
+                filter_by(session_id=session['_file_id']).\
+                first()
+            # Fetch the currently viewed package or 404
+            package = Package.query.\
+                filter_by(package_file=package_file.id).\
+                filter_by(name=name).first_or_404()
 
-    # Depending package name formatting
-    dependencies = package.depends.split(',')
-    singles, alternatives = filter_alternative_packages(dependencies)
+            # Depending package name formatting
+            dependencies = package.depends.split(',')
+            singles, alternatives = filter_alternative_packages(dependencies)
 
-    # Fetch packages that depend ON the currently viewed package
-    packages_depending = Package.query.\
-        filter(Package.package_file == package_file.id).\
-        filter(Package.depends.contains(name)).\
-        all()
-    # Filter out duplicate packages that result from different versions
-    # ex. libxxx(0.3), libxx(0.3.1) etc
-    filtered_depending_packages = filter_duplicate_names(packages_depending)
-    # Fetch all names to check wether package definition exists in file
-    package_names = [package.name for package in package_file.packages]
-    return render_template(
-        'package.html',
-        package=package,
-        dependencies=singles,
-        alternatives_list=alternatives,
-        packages_depending=filtered_depending_packages,
-        package_names=package_names
-        )
+            # Fetch packages that depend ON the currently viewed package
+            packages_depending = Package.query.\
+                filter(Package.package_file == package_file.id).\
+                filter(Package.depends.contains(name)).\
+                all()
+            # Filter out duplicate packages that result from different versions
+            # ex. libxxx(0.3), libxx(0.3.1) etc
+            filtered_depending_packages = filter_duplicate_names(packages_depending)
+            # Fetch all names to check wether package definition exists in file
+            package_names = [package.name for package in package_file.packages]
+            return render_template(
+                'package.html',
+                package=package,
+                dependencies=singles,
+                alternatives_list=alternatives,
+                packages_depending=filtered_depending_packages,
+                package_names=package_names
+                )
+    except(KeyError):
+        return render_template('errors/404.html'), 404
 
 
 @main.route('/reset_session')
