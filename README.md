@@ -1,8 +1,9 @@
 # pReader
-### Linux package file analyzer; preassignment for Reaktor job application
+#### Linux package file analyzer; preassignment for Reaktor job application
+#### [View pReader at jkerola-preader.herokuapp.com](http://jkerola-preader.herokuapp.com)
 
 ## About
-This app is my solution to [Reaktors application preassignment](https://www.reaktor.com/junior-dev-assignment/).
+pReader (package-reader) is my solution to [Reaktors application preassignment](https://www.reaktor.com/junior-dev-assignment/).
 
 In short, the app analyzes the */var/lib/dpkg/**status*** file found in Debian based Linux distributions, creating a HTML directory of the packages within for human friendly browsing.
 

@@ -8,3 +8,4 @@ __pycache__/
 reaktor_env/
 #database
 *.db
+!preader.db
