@@ -8,7 +8,7 @@ def read_file(packages_file):
     packages_list = []
     package = {}
     description = ''
-    print(packages_file.filename)
+    # File has to be converted into readable format
     content = packages_file.stream.read().decode('utf-8')
     buffer = StringIO(content)
     for line in buffer.readlines():
