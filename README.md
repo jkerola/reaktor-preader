@@ -23,8 +23,8 @@ source venv/bin/activate
 then clone the app into your local machine and install the required packages:
 
 ```
-git clone https://github.com/jkerola/xxxxx.git
-cd xxx
+git clone https://github.com/jkerola/reaktor-preader.git
+cd reaktor-preader
 pip install -r requirements.txt
 ```
 To run the pre-written unit tests:

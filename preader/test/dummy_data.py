@@ -1,4 +1,7 @@
-Package: test-package
+class RealDummy(object):
+    '''Test dummy with real data'''
+    name = 'real.file'
+    data = b'''Package: test-package
 Depends: moot, another-test | third-test | fake
 Description: Test description
  More test description
@@ -12,8 +15,14 @@ Description: description of said package
 Homepage: None
 
 Package: third-test
-Depends: another-test, moot | test-package 
+Depends: another-test, moot | test-package
 Description: No More
 Homepage: None
 
-ASDASDASDASD
+ASDASDASDASD'''
+
+
+class FakeDummy(object):
+    '''Fake dummy object'''
+    name = 'fake.file'
+    data = b'fake data'

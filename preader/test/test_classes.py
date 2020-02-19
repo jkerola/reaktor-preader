@@ -6,6 +6,8 @@ from sqlalchemy import event
 from preader.models import Package, File
 from preader import db
 from app import app
+from io import BytesIO
+from .dummy_data import RealDummy, FakeDummy
 
 
 # Code example from the Programmable Web Project Course at
@@ -131,10 +133,6 @@ class TestApp(object):
         response = client.get('/')
         assert response.status_code == 200
 
-        with pytest.raises(TypeError):
-            response = client.post('/', data=None)
-            assert response.status_code == 200
-
     def test_route_package(self, db_handle):
         '''Test package route'''
         self.test_create_instances(db_handle)
@@ -144,6 +142,40 @@ class TestApp(object):
         response = client.get('/test-package')
         assert response.status_code == 200
 
-    # TO DO
-    # FILE UPLOAD TEST
-    # FILE RESET TEST
+    def test_file_upload(self, db_handle):
+        '''Test uploading a file'''
+        self.test_create_instances(db_handle)
+        client = self.get_client()
+        # Dummy data
+        test_file = (BytesIO(RealDummy.data), RealDummy.name)
+        data = {
+            'file': test_file
+        }
+        response = client.post(
+            '/',
+            data=data,
+            follow_redirects=True,
+            content_type='multipart/form-data'
+        )
+        assert response.status_code == 200
+
+    def test_corrupt_file_upload(self, db_handle):
+        '''Test uploading a file that is correct type, but no suitable data to read'''
+        self.test_create_instances(db_handle)
+        client = self.get_client()
+        # Test false positive data upload
+        corrupt_file = (BytesIO(FakeDummy.data), FakeDummy.name)
+        data = {
+            'file': corrupt_file
+        }
+        response = client.post(
+            '/',
+            data=data,
+            follow_redirects=True,
+            content_type='multipart/form-data'
+        )
+        # This will pass the file upload check
+        assert response.status_code == 200
+        # But should display the error message
+        html = response.get_data()
+        assert b'Could not load' in html
