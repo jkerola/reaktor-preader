@@ -11,7 +11,7 @@ def create_app(config=Config):
     # App Config
     app.config.from_object(config)
     db.init_app(app)
-
+    
     # Blueprints
     from .routes import main
     from .errors import error
