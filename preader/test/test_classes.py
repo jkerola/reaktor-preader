@@ -158,6 +158,10 @@ class TestApp(object):
             content_type='multipart/form-data'
         )
         assert response.status_code == 200
+        
+        # test if package urls exist
+        response = client.get('/test-package')
+        assert response.status_code == 200
 
     def test_corrupt_file_upload(self, db_handle):
         '''Test uploading a file that is correct type, but no suitable data to read'''

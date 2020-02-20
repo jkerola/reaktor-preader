@@ -16,20 +16,15 @@ def index(package_file=None):
     # Checks wether a file has been uploaded this session
     try:
         if session['_file_id']:
-            current_file = File.query.\
-                filter_by(session_id=session['_file_id']).first()
-
-            return render_template(
-                'index.html',
-                session=session['_file_id'],
-                current_file=current_file,
-                form=file_form
-                )
+            current_file = File.query.filter_by(session_id=session['_file_id']).first()
+            return render_template('index.html', session=session['_file_id'],
+                                   current_file=current_file, form=file_form)
     except(KeyError):
         pass
     if request.method == 'POST':
         # Files are too large for a cookie (>4k bytes),
         # so the data is stored in a serverside database
+        # and the file_id attribute is stored in the cookie instead
         session_id = secrets.token_hex(16)
         session['_file_id'] = session_id
         package_file = request.files.get('file')
@@ -59,6 +54,7 @@ def package(name):
     '''Displays information about package, its dependecies and
     what packages depend on it.'''
     try:
+        #  Check whether session cookie holds file identifier
         if session['_file_id']:
             package_file = File.query.\
                 filter_by(session_id=session['_file_id']).\
